@@ -1,5 +1,5 @@
 ---
-title: "Apply Linear Regression Model to analyze the number of children someone has"
+title: "Apply logistic regression Model to analyze the number of children someone has"
 author: "Junming Zhang"
 date: "Saturday, October 17, 2020"
 output: pdf_document
@@ -16,20 +16,41 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Abstract
 
-<!-- income, education, partner education, self-rated health, self-rated mental health, martial status, religion importance-->
+<!-- income, education, partner education, self-rated health, self-rated mental health, martital status-->
 
 <!-- Here is where you give a brief (one paragraph overview of your entire paper). This should include some background/introduction, some methodology, results and conclusions. -->
-Having children is one of the key factors of a family, and children play an important role in family relationship. Also, birth rate influences the future of a community because they will be the labour force of the community, which has an impact on the economical and social development, and even existence of the community. Therefore, it is neccessary to have an indicator to suggest what factors influence the number of children a family has, and so the government can make policies to control birth rate based on the indicator. We tried to investigate such a factor by the dataset \textbf{Canadian General Social Survey (GSS)} (citation 5) of year 2017, in which had some attributes like number of childrens one person has and some other features of a person which may help (total_children, marital_status, education, partner_education, income_family, self_rated_health and self_rated_mental_health). To generate such an indicator, we built a linear regression model with the dataset, which predicts the number of children one may have with some attributes I searched before which may influence.
+Having children is one of the key factors of a family, and children play an important role in family relationship. Also, birth rate influences the future of a community because they will be the labour force of the community, which has an impact on the economical and social development, and even existence of the community. Therefore, it is neccessary to have an indicator to suggest what factors influence if someone may have many children, and so the government can make policies to control birth rate based on the indicator. We tried to investigate such a factor by the dataset \textbf{Canadian General Social Survey (GSS)} (citation 5) of year 2017, a dataset generated in Canada, in which had some attributes like number of childrens one person has and some other features of a person which may help (total_children, marital_status, education, partner_education, income_family, self_rated_health and self_rated_mental_health). To generate such an indicator, we built a logistic regression model with the dataset, which predicts the possibility of many children (more than 2 children) one may have with some attributes I searched before which may help. <!-- TODO: talk about some conclusion/results-->
 
 ## Introduction
 
 <!-- Here is where you should give insight into the setting and introduce the goal of the analysis. Here you can introduce ideas and basic concepts regarding the study setting and the potential model. Again, this is the introduction, so you should be explaining the importance of the work that is ahead and hopefully build some suspense for the reader. You can also highlight what will be included in the subsequent sections. -->
-Our goal is to find a model to predict how many children one may have based on attributes may have strong affects. To create such a model, we use the dataset \textbf{Canadian General Social Survey (GSS)} from year 2017, which has attributes that may contribute to the our research goal, like total_children, marital_status, education, partner_education, income_family, self_rated_health and self_rated_mental_health. Total chilren is the attribute we are interested in. Education and partner_education are important because people who are entolled in the tertiary education tend to postpone their marriage and have fewer children (citation 1). We consider income_family because income_family is a mirror of the economy development, which is related to birth rate, for instance, economic depression may mean low fertility (Pobric &amp; Robinson, 2015). We look into marital_status, because the type of partnership may contribute to birth rate, for example, those who get married may have more children than those who cohabit (Martinez, Daniels, &amp; Chandra, 2012). Finally but still important, the health status impacts the number of children on may have, for example, countries with higher HDI ( Human Development Index, which involves life expectancy, education, and per capita income) may have lower fertility rate, which is reflected by the citation 4, countries with lower HDI have higher fertility rate and vice versa. Since health is related to HDI for life expectancy, we put the self_rated_health and self_rated_mental_health into the model. Therefore, we create a linear regression model with these attributes to predict the number of children one may have, and analyze how is our prediction related to these attributes, and how strong is our interest and these attributes correlate.
+Our goal is to find a model to predict the possibility one may have more than 2 children based on attributes may have strong affects, and test how strongly are these attributes correlated to the number of children one may have. To create such a model, we use the dataset \textbf{Canadian General Social Survey (GSS)} from year 2017, which has attributes that may contribute to the our research goal, like total_children, marital_status, education, partner_education, income_family, self_rated_health and self_rated_mental_health, and we built our model with these attributes. Total chilren is the attribute we are interested in. Education and partner_education are important because people who are entolled in the tertiary education tend to postpone their marriage and have fewer children (citation 1). We consider income_family because income_family is a mirror of the economy development, which is related to birth rate, for instance, economic depression may mean low fertility (Pobric &amp; Robinson, 2015). We look into marital_status, because the type of partnership may contribute to birth rate, for example, those who get married may have more children than those who cohabit (Martinez, Daniels, &amp; Chandra, 2012). Finally but still important, the health status impacts the number of children on may have, for example, countries with higher HDI ( Human Development Index, which involves life expectancy, education, and per capita income) may have lower fertility rate, which is reflected by the citation 4, countries with lower HDI have higher fertility rate and vice versa. Since health is related to HDI for life expectancy, we put the self_rated_health and self_rated_mental_health into the model. Therefore, we create a logistic regression model with these attributes to predict the possibility one may have many (more than 2) children, and analyze how is our prediction related to these attributes, and how strong is our interest and these attributes correlated. <!-- TODO: 1. what analysis did you do? 2. Why is the analysis useful? -->
 
 ## Data
 
 <!-- Introduce the data, explain why it was selected. Make sure to comment on important features and highlight any potential drawbacks to the data. -->
-The dataset is obtained from \textbf{Canadian General Social Survey (GSS)} of year 2017, it contains all the attributes I listed in the Introduction section that are used to build the model. The data are collected with the stratified random sampling method (Beaupré, 2020), a probability sampling approach. The target population for the dataset included all persons 15 years of age and older in Canada, excluding: 1. Residents of the Yukon, Northwest Territories, and Nunavut; and 2. Full-time residents of institutions (Beaupré, 2020). The frame of the survey is 1. Lists of telephone numbers in use (both landline and cellular) available to Statistics Canada from various sources (telephone companies, Census of population, etc.); and 2. The Address Register (AR): List of all dwellings within the ten provinces. The probability sampling method (collection approach for this dataset) decreases errors like generalization and more representative for the whole population. However, there are some drawbacks of the dataset from both non-sampling error. The non-sampling error is mainly from (patial or total) non-participation. This is handled by adjusting the weights to less for non-participation cases (Beaupré, 2020).
+The dataset is obtained from \textbf{Canadian General Social Survey (GSS)} of year 2017, it contains all the attributes I listed in the Introduction section that are used to build the model. To make the dataset, they use a questionnaire and interview the respondents on phone call (Beaupré, 2020). A brief outline of the questionnaire is following (Beaupré, 2020):
+\begin{itemize}
+\item Entry component (respondent’s date of birth)
+\item Family origins
+\item Leaving the parental home
+\item Conjugal history
+\item Intentions and reasons to form a union
+\item Respondent’s children
+\item Fertility intentions
+\item Maternity/parental leave
+\item Organization and decision making within the household
+\item Arrangements and financial support after a separation/divorce
+\item Labour market new and education
+\item Health and subjective well-being
+\item Characteristics of respondent’s dwelling
+\item Characteristics of respondent of spouse/partner
+\end{itemize}
+The questionnaire to build the dataset was delivered by telephone (Beaupré, 2020), and this questionnaire was helpful because it covers many details on the personal conditions of the respondent, like health and education, for which there is significant proof that influences the fertility rate. However, the previous nationalities of respondents are ignored, which may also introduce errors in the result, because some countries may have special cultures and religions that affect the fertility rate. There are also pros and cons for collecting data by phone. The benefit is that, since the most people have their own telephones today, so it is easy to connect and the data can be collected with lower costs. However, some people may not respond to the phone call, which leads to the non-participation error.
+
+There are 81 variables/attributes and 20602 observations in the dataset. The variables generally cover many aspects about the living conditions and the personal conditions of the interviewee, which may suggest our interest, and we tested some of them which are possibly helpful according to the documents and references we found, and investigate the correlation between the variables in our scope and our interest. And also, the dataset has a large number of observations with respect to the place where the data were collected, and thus this makes the results (in Canada) can be found from the dataset more representative. However, since the dataset is only limited to one country (Canada), the variables do not reflect other factors may also have impacts but not suitable for just one country, like policy, war or peace, natural conditions, and so hard to reflect worldwide facts.
+
+The data are collected with the stratified random sampling (simple random sampling without replacement in the stratum) method (Beaupré, 2020), a probability sampling approach. The target population for the dataset included all persons 15 years of age and older in Canada, excluding: 1. Residents of the Yukon, Northwest Territories, and Nunavut; and 2. Full-time residents of institutions (Beaupré, 2020). The frame of the survey is 1. Lists of telephone numbers in use (both landline and cellular) available to Statistics Canada from various sources (telephone companies, Census of population, etc.); and 2. The Address Register (AR): List of all dwellings within the ten provinces. The probability sampling method (collection approach for this dataset) decreases errors like generalization and more representative for the whole population. However, there are some drawbacks of the dataset from both non-sampling error. The non-sampling error is mainly from (patial or total) non-participation. This is handled by adjusting the weights to less for non-participation cases (Beaupré, 2020), and in my implementation, I removed all rows with NA in the columns we needed to build the model.
  
 
 ## Model
@@ -37,16 +58,204 @@ The dataset is obtained from \textbf{Canadian General Social Survey (GSS)} of ye
 <!-- Introduce the selected model here. It is expected that you will use some mathematical notation here. If you do please ensure that all notation is explained. You may also want to discuss any special (hypothetical) cases of your model here, as well as any caveats.   -->
 ```{r, include=FALSE}
 library(survey)
+library(tidyverse)
+library(ggplot2)
 
-data <- read.csv("gss.csv")
-str(as.factor(data$marital_status))
+gss_data <- read.csv("gss.csv")
+gss_data[gss_data == "NA"] = NA
+
+# the function removes NA in rows we need
+# from https://stackoverflow.com/questions/11254524/omit-rows-containing-specific-column-of-na
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+gss_data <- completeFun(gss_data, c("total_children", "marital_status", "education", "partner_education", "income_family", "self_rated_health", "self_rated_mental_health"))
+
+str(gss_data)
+ncol(gss_data)
+nrow(gss_data)
+
+# All attributes:
+# total_children, marital_status, education, partner_education, income_family, self_rated_health and self_rated_mental_health
 ```
 
+Here is the number of observations for each stratum (since the data are collected by stratified sampling without replacement), the stratum was divided based on the province the interviewee lived (Beaupré, 2020), we built our logistic regression model based on the stratification below:
+```{r, echo=FALSE}
+# make fpc by finding samples for each stratum (diveded by province)
+gss_data %>% group_by(province) %>% count()
+```
+
+```{r, include=FALSE}
+# add fpc for each observation since the data were collected by stratified sampling without replacement
+gss_data$fpc <- ifelse(gss_data$province == "Alberta", 1064,
+                       ifelse(gss_data$province == "British Columbia", 1490,
+                              ifelse(gss_data$province == "Manitoba", 708,
+                                     ifelse(gss_data$province == "New Brunswick", 772,
+                                            ifelse(gss_data$province == "Newfoundland and Labrador", 702,
+                                                   ifelse(gss_data$province == "Nova Scotia", 837,
+                                                          ifelse(gss_data$province == "Ontario", 3313,
+                                                                 ifelse(gss_data$province == "Prince Edward Island", 421,
+                                                                        ifelse(gss_data$province == "Quebec", 2191,
+                                                                               ifelse(gss_data$province == "Saskatchewan", 675, 0))))))))))
+
+# create a column to indocate if someone has more than 2 children
+gss_data$if_many <- as.factor(ifelse(gss_data$total_children > 2, 1, 0)) 
+
+
+# N = 37281000
+# n = length(gss_data$age)
+# fpc.srs = rep(N, n)
+gss.design = svydesign(id=~1, strata=~province, data=gss_data, fpc=~fpc)
+
+# build the regression model (with stratified random sampling)
+mysvylm = svyglm(if_many ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design, family="binomial")
+```
+
+```{r, include=FALSE}
+mysvylm$xlevels
+```
+
+```{r, echo=FALSE, warning=FALSE}
+summary.lm(mysvylm)
+```
 ## Results
 
 <!-- Here you will include all results. This includes descriptive statistics, graphs, figures, tables, and model results. Please ensure that everything is well formatted and in a report style. You must also provide an explanation of the results in this section. You can overflow to an Appendix if needed.  -->
 
 <!-- Please ensure that everything is well labelled. So if you have multiple histograms and plots, calling them Figure 1, 2, 3, etc. and referencing them as Figure 1, Figure 2, etc. in your report will be expected. The reader should not get lost in a sea of information. Make sure to have the results be clean, well formatted and digestible. -->
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(marital_status) %>% count(name="have_many")
+data2 = gss_data %>% group_by(marital_status) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=marital_status, y=prob, color=marital_status)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for each marital status") -> pic
+
+pic
+```
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(education) %>% count(name="have_many")
+data2 = gss_data %>% group_by(education) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=education, y=prob, color=education)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for each education status") -> pic
+
+pic
+```
+
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(partner_education) %>% count(name="have_many")
+data2 = gss_data %>% group_by(partner_education) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=partner_education, y=prob, color=partner_education)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for each partner_education status") -> pic
+
+pic
+```
+
+
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(income_family) %>% count(name="have_many")
+data2 = gss_data %>% group_by(income_family) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=income_family, y=prob, color=income_family)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for each interval of family income") -> pic
+
+pic
+```
+
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(self_rated_health) %>% count(name="have_many")
+data2 = gss_data %>% group_by(self_rated_health) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=self_rated_health, y=prob, color=self_rated_health)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for self health evaluation") -> pic
+
+pic
+```
+
+```{r, echo=FALSE}
+
+# mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
+
+# marital_status
+data1 = gss_data %>% filter(if_many == 1) %>% group_by(self_rated_mental_health) %>% count(name="have_many")
+data2 = gss_data %>% group_by(self_rated_mental_health) %>% count(name = "total")
+data_merged = merge(data1, data2)
+data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
+
+data_merged
+
+ggplot(data_merged, aes(x=self_rated_mental_health, y=prob, color=self_rated_mental_health)) +
+  geom_bar(stat="identity", width = 0.5, fill="white")+
+  geom_text(aes(label=prob), vjust=1.6, color="blue",
+            position = position_dodge(0.9), size=3.5) +
+  theme(axis.text.x = element_text(face="bold",
+    color="#993333", size=7, angle=45)) + ggtitle("the possibility to have many kids (> 2) for self mental health evaluation") -> pic
+
+pic
+```
 
 ## Discussion
 
@@ -69,3 +278,4 @@ In the next step, we may collect more data in other countries with different eco
 4. Fertility rate, total (births per woman). (n.d.). Retrieved October 17, 2020, from https://data.worldbank.org/indicator/SP.DYN.TFRT.IN
 5. 2017 General Social Survey (GSS): Families Cycle 31. (2017). Retrieved October 17, 2020, from Statistics Canada.
 6. Beaupré, P. (2020). General Social Survey Cycle 31 : Families Public Use Microdata File Documentation and User’s Guide. Ottawa, Canada: Authority of the Minister responsible for Statistics Canada. Retrieved October 17, 2020, from https://sda-artsci-utoronto-ca.myaccess.library.utoronto.ca/sdaweb/dli2/gss/gss31/gss31/more_doc/GSS31_User_Guide.pdf
+
