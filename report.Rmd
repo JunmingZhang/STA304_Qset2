@@ -1,6 +1,6 @@
 ---
 title: "Apply logistic regression Model to analyze the number of children someone has"
-author: "Junming Zhang"
+author: "Junming Zhang, Hairong Sun"
 date: "Saturday, October 17, 2020"
 output: pdf_document
 ---
@@ -61,6 +61,7 @@ library(survey)
 library(tidyverse)
 library(ggplot2)
 
+# read the data we need
 gss_data <- read.csv("gss.csv")
 gss_data[gss_data == "NA"] = NA
 
@@ -70,9 +71,10 @@ completeFun <- function(data, desiredCols) {
   completeVec <- complete.cases(data[, desiredCols])
   return(data[completeVec, ])
 }
-
+# remove all rows with NA, which makes analysis easier (give no weight on them)
 gss_data <- completeFun(gss_data, c("total_children", "marital_status", "education", "partner_education", "income_family", "self_rated_health", "self_rated_mental_health"))
 
+# show the content and properties of the dataset
 str(gss_data)
 ncol(gss_data)
 nrow(gss_data)
@@ -103,21 +105,20 @@ gss_data$fpc <- ifelse(gss_data$province == "Alberta", 1064,
 # create a column to indocate if someone has more than 2 children
 gss_data$if_many <- as.factor(ifelse(gss_data$total_children > 2, 1, 0)) 
 
-
-# N = 37281000
-# n = length(gss_data$age)
-# fpc.srs = rep(N, n)
-gss.design = svydesign(id=~1, strata=~province, data=gss_data, fpc=~fpc)
-
 # build the regression model (with stratified random sampling)
+gss.design = svydesign(id=~1, strata=~province, data=gss_data, fpc=~fpc)
 mysvylm = svyglm(if_many ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design, family="binomial")
 ```
 
 ```{r, include=FALSE}
+# show the status for each category
+# to see the result and find the reference level, please set include to TRUE
 mysvylm$xlevels
 ```
 
+
 ```{r, echo=FALSE, warning=FALSE}
+# show the summary of the model
 summary.lm(mysvylm)
 ```
 ## Results
@@ -129,14 +130,16 @@ summary.lm(mysvylm)
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(marital_status) %>% count(name="have_many")
 data2 = gss_data %>% group_by(marital_status) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=marital_status, y=prob, color=marital_status)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -150,14 +153,16 @@ pic
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(education) %>% count(name="have_many")
 data2 = gss_data %>% group_by(education) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=education, y=prob, color=education)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -172,14 +177,16 @@ pic
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(partner_education) %>% count(name="have_many")
 data2 = gss_data %>% group_by(partner_education) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=partner_education, y=prob, color=partner_education)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -195,14 +202,16 @@ pic
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(income_family) %>% count(name="have_many")
 data2 = gss_data %>% group_by(income_family) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=income_family, y=prob, color=income_family)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -217,14 +226,16 @@ pic
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(self_rated_health) %>% count(name="have_many")
 data2 = gss_data %>% group_by(self_rated_health) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=self_rated_health, y=prob, color=self_rated_health)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -239,14 +250,16 @@ pic
 
 # mysvylm = svyglm(total_children ~ as.factor(marital_status) + as.factor(education) + as.factor(partner_education) + as.factor(income_family) + as.factor(self_rated_health) + as.factor(self_rated_mental_health), gss.design
 
-# marital_status
+# make the data table
 data1 = gss_data %>% filter(if_many == 1) %>% group_by(self_rated_mental_health) %>% count(name="have_many")
 data2 = gss_data %>% group_by(self_rated_mental_health) %>% count(name = "total")
 data_merged = merge(data1, data2)
 data_merged %>% mutate(prob = round(have_many / total, 4)) -> data_merged
-
+# show the data table
 data_merged
 
+# plot the graph
+# formatted by http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
 ggplot(data_merged, aes(x=self_rated_mental_health, y=prob, color=self_rated_mental_health)) +
   geom_bar(stat="identity", width = 0.5, fill="white")+
   geom_text(aes(label=prob), vjust=1.6, color="blue",
@@ -278,4 +291,15 @@ In the next step, we may collect more data in other countries with different eco
 4. Fertility rate, total (births per woman). (n.d.). Retrieved October 17, 2020, from https://data.worldbank.org/indicator/SP.DYN.TFRT.IN
 5. 2017 General Social Survey (GSS): Families Cycle 31. (2017). Retrieved October 17, 2020, from Statistics Canada.
 6. Beaupré, P. (2020). General Social Survey Cycle 31 : Families Public Use Microdata File Documentation and User’s Guide. Ottawa, Canada: Authority of the Minister responsible for Statistics Canada. Retrieved October 17, 2020, from https://sda-artsci-utoronto-ca.myaccess.library.utoronto.ca/sdaweb/dli2/gss/gss31/gss31/more_doc/GSS31_User_Guide.pdf
-
+7. Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+```{r, echo=FALSE, include=FALSE}
+citation("tidyverse")
+```
+8. T. Lumley (2020) "survey: analysis of complex survey samples". R package version 4.0.
+9. T. Lumley (2004) Analysis of complex survey samples. Journal of Statistical Software 9(1): 1-19
+10. T. Lumley (2010) Complex Surveys: A Guide to Analysis Using R. John Wiley and Sons.
+```{r, echo=FALSE, include=FALSE}
+citation("survey")
+```
+11. User1489975user1489975 1, BenBarnesBenBarnes 17.3k66 gold badges5151 silver badges7070 bronze badges, Mnelmnel 103k2525 gold badges241241 silver badges240240 bronze badges, Amrrsamrrs 5, RnoobRnoob 9031010 silver badges1212 bronze badges, DroneyDroney 11111 silver badge44 bronze badges, . . . Luchao QiLuchao Qi 3122 bronze badges. (1961, October 01). Omit rows containing specific column of NA. Retrieved October 18, 2020, from https://stackoverflow.com/questions/11254524/omit-rows-containing-specific-column-of-na
+12. Ggplot2 barplots : Quick start guide - R software and data visualization. (n.d.). Retrieved October 18, 2020, from http://www.sthda.com/english/wiki/ggplot2-barplots-quick-start-guide-r-software-and-data-visualization
