@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <!-- # Name(s) of Author(s)  -->
 <!-- # Date -->
-#### Code and data supporting this analysis is available at: <Github website!!!>
+#### Code and data supporting this analysis is available at:  \href{https://github.com/JunmingZhang/STA304_Qset2.git}{here} (click "here")
 ## Abstract
 
 <!-- income, education, partner education, self-rated health, self-rated mental health, martital status-->
@@ -132,7 +132,7 @@ summary.lm(mysvylm)
 
 We used R studio to run the model. In this model, we continued our analysis by building a logistic regression model to predict the odds of having more than 2 children in Canada using varables marital status, respondents and partners’ education, family income, self rated physical and mental health. Since the data is collected form Canada in 2017, the scope of application of my research is within Canada. Using the data selected, we build a logistic regression model with the following formula:
 
-$(p/1-p)$ = exp(${\beta}_0$ + ${\beta}_1$marital_statusLiving_common_law + ${\beta}_2$marital_status_Married + ... + ${\beta}_{23}$self_rated_health_Excellent + ... + ${\beta}_{32}$self_rated_mental_health_Very_Good)
+$\log\frac{p}{1-p} = \beta_0 + \beta_1 marital\_status\_Living\_common\_law + \beta_2 marital\_status\_Married + ... + \beta_{23}self\_rated\_health\_Excellent + ... + \beta_{32}self\_rated\_mental\_health\_Very\_Good$
 
 p is the probability of having many children. (p/1-p) is the odds of having more than 2 children in Canada. ${\beta}_0$ to ${\beta}_{32}$ are coefficients and associcate with each variable. Varables from as.factor(marital_status)Living common-law to as.factor(self_rated_mental_health)Very good are dummy variables. There are only 2 possible value range: 1 or 0 for dummy variables. For example, when a person is married, the marital_status_Married = 1. Otherwise equals to 0. Values shown above. 
 
