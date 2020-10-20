@@ -169,7 +169,9 @@ ggplot(data_merged, aes(x=marital_status, y=prob, color=marital_status)) +
 pic
 ```
 
-We analyzed the relationship between the probability of having more than 2 kids in Canada and each attribute respectively. In this graph, based on marital status, we can see that widowed people have the highest probability while people who never married have the lowest probability of parenting more than 2 children. 
+We analyzed the relationship between the probability of having more than 2 kids in Canada and each attribute respectively. In this graph, based on marital status, we can see that widowed people have the highest probability while people who never married have the lowest probability of parenting more than 2 children. The probability is ranked as below:
+
+Single, never married < Living common-law < Divorced < Separated < Married < Widowed
 
 The calculation of probability is the amount of (>2 kids) cases/total cases within one situation.
 
@@ -197,7 +199,9 @@ ggplot(data_merged, aes(x=education, y=prob, color=education)) +
 pic
 ```
 
-In the education section, the probability of having more children for people who received less than high school diploma is surprisingly doubled the amount of higher education background groups( people who received a Bachelor's degree/ University certificate). 
+In the education section, the probability of having more children for people who received less than high school diploma is surprisingly doubled the amount of higher education background groups( people who received a Bachelor's degree/ University certificate). The probability is ranked as below:
+
+Bachelar's degree(e.g. B.A., B.Sc., LL.B.) < Unversity certificate, diploma or degree above the bach... < College, CEGEP or other non-university certificate or di... < University certificate or diploma below the bachelor's level < Trade certificate or diploma < High school diploma or a high school equivalency certificate < Less than high school diploma or its equivalent
 
 ```{r, echo=FALSE}
 
@@ -223,7 +227,9 @@ ggplot(data_merged, aes(x=partner_education, y=prob, color=partner_education)) +
 pic
 ```
 
-In the partner_education section, the probability of having more children for people who received less than high school diploma is almost doubled the amount of higher education background groups( people who received a Bachelor's degree/ University certificate) as the last graph.
+In the partner_education section, the probability of having more children for people who received less than high school diploma is almost doubled the amount of higher education background groups( people who received a Bachelor's degree/ University certificate) as the last graph.The probability is ranked as below:
+
+Unversity certificate, diploma or degree above the bach... < Bachelar's degree(e.g. B.A., B.Sc., LL.B.) < College, CEGEP or other non-university certificate or di... < University certificate or diploma below the bachelor's level < Trade certificate or diploma < High school diploma or a high school equivalency certificate < Less than high school diploma or its equivalent
 
 ```{r, echo=FALSE}
 
@@ -249,7 +255,9 @@ ggplot(data_merged, aes(x=income_family, y=prob, color=income_family)) +
 pic
 ```
 
-In the family income section, the variation between different groups is not as huge as education-related graphs. People who have a family income of \$25,000 to $49,999 have the highest probability of parenting more than 2 kids.
+In the family income section, the variation between different groups is not as huge as education-related graphs. People who have a family income of \$25,000 to $49,999 have the highest probability of parenting more than 2 kids.The probability is ranked as below:
+
+Less than \$25,000 <\$75,000 to \$99,999 <\$100,000 to \$124,999 <\$125,000 and more <\$50,000 to \$74,999 <\$25000 to \$49,999
 
 ```{r, echo=FALSE}
 
@@ -275,7 +283,9 @@ ggplot(data_merged, aes(x=self_rated_health, y=prob, color=self_rated_health)) +
 pic
 ```
 
-In the self-health evaluation section, apart from people who do not know their health condition, the highest probability is 0.3889 (poor), and the lowest 0.247(Excellent).
+In the self-health evaluation section, apart from people who do not know their health condition, the highest probability is 0.3889 (poor), and the lowest 0.247(Excellent). The probability is ranked as below:
+
+Excellent < Very Good < Good < Fair < Poor < Don't know
 
 ```{r, echo=FALSE}
 
@@ -301,14 +311,18 @@ ggplot(data_merged, aes(x=self_rated_mental_health, y=prob, color=self_rated_men
 pic
 ```
 
-In the self mental health evaluation section, apart from people who do not know their mental health condition, the highest probability is 0.3094 (Good), and the lowest 0.2451(Poor).
+In the self mental health evaluation section, apart from people who do not know their mental health condition, the highest probability is 0.3094 (Good), and the lowest 0.2451(Poor). The probability is ranked as below:
+
+Don't know < Poor < Very Good < Excellent < Fair < Good
+
+There are several interesting conclusions we found in the result graphs. Firstly, from the perspective of marital status, the probability of having more children is higher for people who once got married. Secondly, from parents' both sides' educational background, people who received the "Less than high school diploma or its equivalent" are at the top of the lists. A pattern shows that the higher the diploma the person receives, the lower the probability of having more children. We deduce that people who received less education may have less knowledge of birth control and planning. In this case, people would have to give birth to more children. Thirdly, the poorer the health condition is, the higher the probability of fertility is and vice versa. Differently, in terms of mental health, the better the mental health is, the higher the probability of having more children. Form this, we can also conclude that parenting children burdens physical conditions but reduce mental stress.
 
 # Discussion
 
 <!-- Here you will discuss conclusions drawn from the results and comment on how it relates to the original goal of the study (which was specified in the Introduction). -->
 
-There are several interesting conclusions we found in the result graphs. Firstly, from the perspective of marital status, the probability of having more children is higher for people who once got married. Secondly, from parents' both sides' educational background, people who received the "Less than high school diploma or its equivalent" are at the top of the lists. A pattern shows that the higher the diploma the person receives, the lower the probability of having more children. We deduce that people who received less education may have less knowledge of birth control and planning. In this case, people would have to give birth to more children. Thirdly, the poorer the health condition is, the higher the probability of fertility is and vice versa. Differently, in terms of mental health, the better the mental health is, the higher the probability of having more children.
-This model can provide reference to policy makers, for example, if the birth rate is too high, maybe the government should give an impulse to parenting/ birth control education. This can also provide references to newly married couples. They could know more about the current parenting situation and make their own plans.In small world,In large world,
+This model can provide reference to policy makers, for example, if the birth rate is too high, maybe the government should give an impulse to parenting/ birth control education. This can also provide references to newly married couples. They could know more about the current parenting situation and make their own plans.
+In large world (all countries), there are cultural and political factors that may influence the statistical result. However, in small world (Canada), Canada does not contain the whole factors. Therefore, the statistical result of Canada is not sufficient to represent the rest of the world.
 
 
 # Weaknesses
